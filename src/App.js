@@ -1,20 +1,22 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
-import Signin from './pages/Signin';
+import Signin from './components/auth/Signin';
 import './App.css';
-import Signup from './pages/Signup';
+import Signup from './components/auth/Signup';
 import Main from './pages/Main';
+import AuthDetail from './components/AuthDetail';
 
 const App = () => {
   return (
     <div className="App">
+      <Header/>
       <Routes>
-        <Route path="/" element={<Header />} />
-        <Route path="/signin" element={<Signin />} />        
-        <Route path="/signup" element={<Signup />} />        
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/mypage" element={<AuthDetail/>}/>
+        <Route path="/" element={<Main />} />
       </Routes>
-      <Main/>
     </div>
   );
 };

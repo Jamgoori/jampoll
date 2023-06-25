@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 const Header = () => {
   return (
     <header className='header'>
-      <div>
+      <Link to='/'>
         <img src="../img/logo.png" alt="" />
-      </div>
+      </Link>
       <div className='menuList'>
         <div>메뉴</div>
         <div>메뉴</div>

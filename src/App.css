@@ -1,4 +1,21 @@
 .header img{width: 100px;}
-.header{width: 100%; background-color: #dedede; display: flex; justify-content: space-between;}
+.header{width: 100%; background-color: #dedede; display: flex; justify-content: space-between; min-height: 60px;}
 .menuList{display: flex;}
 .header .sign{display: flex;}
+
+/* 로그인 */
+
+button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #9619de;
+  color: #ffffff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #8400af;
+}
