@@ -1,8 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth"; 
-import { getFirestore } from "firebase/firestore";
-
 const firebaseConfig = {
   apiKey: "AIzaSyAF7LLxHKh23ratBnTMQQ6nql9egXExJ6M",
   authDomain: "jampoll.firebaseapp.com",
@@ -17,6 +15,5 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
-const db = getFirestore(app);
 
-export default {auth , db};
+export default auth;
