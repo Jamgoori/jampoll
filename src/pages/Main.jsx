@@ -1,8 +1,11 @@
 import React from 'react'
+import PostForm from '../components/PostForm'
 
 const Main = () => {
   return (
-    <div>메인화면2</div>
+    <div>
+      <PostForm/>
+    </div>
   )
 }
 
