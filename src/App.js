@@ -2,10 +2,10 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Signin from './components/auth/Signin';
-import './App.css';
 import Signup from './components/auth/Signup';
 import Main from './pages/Main';
 import AuthDetail from './components/AuthDetail';
+import './App.css';
 
 const App = () => {
   return (
