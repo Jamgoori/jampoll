@@ -51,11 +51,7 @@ const PostList = () => {
           <div key={title.id}>
             <div>제목: {title.title}</div>
             <div>토의: {title.discuss1 ? "true" : "false"}</div>
-            <input
-              type="checkbox"
-              value={title.discuss1}
-              checked={title.discuss1}
-            />
+
             <div className="flex">
               <button>글수정하기</button>
               <button

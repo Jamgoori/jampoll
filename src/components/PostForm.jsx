@@ -1,19 +1,30 @@
 import { useState } from "react";
 import { db } from "../firebase";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 
 const PostForm = () => {
   const [newTitle, setNewTitle] = useState("");
-  const titleCollectionRef = collection(db, "board");
+  const [newSubcollection, setNewSubcollection] = useState("");
 
   const createTitle = async () => {
     const newPost = {
       title: newTitle,
-      createdat: serverTimestamp(), // 현재 시간의 타임스탬프를 저장
+      createdat: serverTimestamp(),
+      subcollection: newSubcollection,
     };
 
-    await addDoc(titleCollectionRef, newPost);
-    setNewTitle(""); // 글 작성 후 제목 입력 필드를 초기화
+    const boardCollectionRef = collection(db, "board");
+    const newTitleDocRef = doc(boardCollectionRef);
+
+    await setDoc(newTitleDocRef, newPost);
+    setNewTitle("");
+    setNewSubcollection("");
   };
 
   return (
@@ -24,6 +35,14 @@ const PostForm = () => {
         value={newTitle}
         onChange={(e) => {
           setNewTitle(e.target.value);
+        }}
+      />
+      <input
+        className="width100"
+        placeholder="서브컬렉션"
+        value={newSubcollection}
+        onChange={(e) => {
+          setNewSubcollection(e.target.value);
         }}
       />
       <button onClick={createTitle}>글 쓰기</button>
