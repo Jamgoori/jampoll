@@ -7,7 +7,6 @@
   display: flex;
   justify-content: space-between;
   min-height: 60px;
-  padding: 0 40px;
 }
 .menuList {
   display: flex;
@@ -17,6 +16,9 @@
 }
 .flex {
   display: flex;
+}
+.width100 {
+  width: 100%;
 }
 /* 로그인 */
 .sign {

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import auth from '../firebase';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import auth from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [authUser, setAuthUser] = useState(null);
@@ -23,8 +23,8 @@ const Header = () => {
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
-        console.log('로그아웃 성공');
-        navigate('/');
+        console.log("로그아웃 성공");
+        navigate("/");
       })
       .catch((error) => {
         console.log("에러 :", error);
@@ -32,18 +32,18 @@ const Header = () => {
   };
 
   return (
-    <header className='header'>
-      <Link to='/'>
+    <header className="header">
+      <Link to="/">
         <img src="../img/logo.png" alt="" />
       </Link>
-      <div className='menuList'>
+      <div className="menuList">
         <div>메뉴</div>
         <div>메뉴</div>
         <div>메뉴</div>
         <div>메뉴</div>
         <div>메뉴</div>
       </div>
-      <div className='sign'>
+      <div className="sign">
         {authUser ? (
           <>
             <p>{`${authUser.email}님 환영합니다.`}</p>

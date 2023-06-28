@@ -34,7 +34,7 @@ const PostList = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const q = query(collection(db, "board"), orderBy("title", "desc"));
+      const q = query(collection(db, "board"), orderBy("createdat", "desc"));
       const querySnapshot = await getDocs(q);
       setTitle(
         querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
@@ -50,7 +50,12 @@ const PostList = () => {
         return (
           <div key={title.id}>
             <div>제목: {title.title}</div>
-            <div>토의: {title.discuss1}</div>
+            <div>토의: {title.discuss1 ? "true" : "false"}</div>
+            <input
+              type="checkbox"
+              value={title.discuss1}
+              checked={title.discuss1}
+            />
             <div className="flex">
               <button>글수정하기</button>
               <button

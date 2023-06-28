@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth"; 
-import { getFirestore } from "@firebase/firestore"
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "@firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyAF7LLxHKh23ratBnTMQQ6nql9egXExJ6M",
   authDomain: "jampoll.firebaseapp.com",
@@ -9,7 +9,7 @@ const firebaseConfig = {
   storageBucket: "jampoll.appspot.com",
   messagingSenderId: "512516787357",
   appId: "1:512516787357:web:3006674537d2cf35139874",
-  measurementId: "G-461KP4LPZR"
+  measurementId: "G-461KP4LPZR",
 };
 
 // Initialize Firebase

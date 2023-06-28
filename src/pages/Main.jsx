@@ -1,14 +1,14 @@
-import React from 'react'
-import PostList from '../components/PostList'
-import PostForm from '../components/PostForm'
+import React from "react";
+import PostList from "../components/PostList";
+import PostForm from "../components/PostForm";
 
 const Main = () => {
   return (
     <div>
-      <PostList/>
-      <PostForm/>
+      <PostList />
+      <PostForm />
     </div>
-  )
-}
+  );
+};
 
-export default Main
+export default Main;

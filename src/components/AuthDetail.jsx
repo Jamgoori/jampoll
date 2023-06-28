@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import auth from '../firebase.js';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import auth from "../firebase.js";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 const AuthDetail = () => {
   const [authUser, setAuthUser] = useState(null);
@@ -24,8 +24,8 @@ const AuthDetail = () => {
   const userSignOut = () => {
     signOut(auth)
       .then(() => {
-        console.log('로그아웃 성공');
-        navigate('/'); 
+        console.log("로그아웃 성공");
+        navigate("/");
       })
       .catch((error) => console.log(error));
   };
