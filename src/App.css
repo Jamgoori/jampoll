@@ -1,12 +1,30 @@
-.header img{width: 100px;}
-.header{width: 100%; background-color: #dedede; display: flex; justify-content: space-between; min-height: 60px; padding: 0 40px;}
-.menuList{display: flex;}
-.header .sign{display: flex;}
-
+.header img {
+  width: 100px;
+}
+.header {
+  width: 100%;
+  background-color: #dedede;
+  display: flex;
+  justify-content: space-between;
+  min-height: 60px;
+  padding: 0 40px;
+}
+.menuList {
+  display: flex;
+}
+.header .sign {
+  display: flex;
+}
+.flex {
+  display: flex;
+}
 /* 로그인 */
-.sign{padding-right: 50px;}
+.sign {
+  padding-right: 50px;
+}
 button {
   display: block;
+  margin: 10px;
   width: 100%;
   padding: 10px;
   background-color: #9619de;
@@ -18,4 +36,9 @@ button {
 
 button:hover {
   background-color: #8400af;
+}
+
+.ddd {
+  width: 50%;
+  margin: 0 auto;
 }
