@@ -4,7 +4,7 @@ import PostForm from "../components/PostForm";
 
 const Main = () => {
   return (
-    <div>
+    <div className="mainbody">
       <PostList />
       <PostForm />
     </div>

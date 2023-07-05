@@ -2,6 +2,9 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "@firebase/firestore";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyAF7LLxHKh23ratBnTMQQ6nql9egXExJ6M",
   authDomain: "jampoll.firebaseapp.com",
@@ -14,7 +17,10 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
+export const storage = getStorage(app)
 const auth = getAuth(app);
+
+// export const storage = getStorage(ref, uploadBytesResumable, getDownloadURL);
 export const db = getFirestore();
 export default auth;
+
