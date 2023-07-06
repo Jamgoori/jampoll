@@ -49,7 +49,7 @@ const PostList = () => {
       return (
         <div key={titleItem.id}>
           <div>제목: {titleItem.title}</div>
-          <div>토의: {titleItem.dscuss1}</div>
+          <div>투표설명: {titleItem.content}</div>
           <button onClick={() => { updateTitle(titleItem.id, titleItem.title) }}>제목 변경하기</button>
           <button onClick={() => { deleteTitle(titleItem.id) }}>글 삭제하기</button>
 
