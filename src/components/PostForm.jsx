@@ -38,12 +38,17 @@ const PostForm = () => {
     await setDoc(newTitleDocRef, newPost);
 
     const subcollectionRef = collection(newTitleDocRef, "question");
+    const answerSubcollectionRef = collection(newTitleDocRef, "answer");
 
     // 투표안건을 문서로 생성하고 각 문서에 값을 저장
     for (let i = 0; i < fieldList.length; i++) {
+      // qeustion
       const fieldName = fieldList[i].fieldName;
       const subcollectionDocRef = doc(subcollectionRef, fieldName);
       await setDoc(subcollectionDocRef, { fieldName });
+      // answer
+      const answerSubcollectionDocRef = doc(answerSubcollectionRef);
+      await setDoc(answerSubcollectionDocRef, {});
     }
 
     // 입력 필드 초기화
