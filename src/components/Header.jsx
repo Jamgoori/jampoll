@@ -33,28 +33,30 @@ const Header = () => {
 
   return (
     <header className="header">
-      <Link to="/">
-        <img src="../img/logo.png" alt="" />
-      </Link>
-      <div className="menuList">
-        <div>메뉴</div>
-        <div>메뉴</div>
-        <div>메뉴</div>
-        <div>메뉴</div>
-        <div>메뉴</div>
-      </div>
-      <div className="sign">
-        {authUser ? (
-          <>
-            <p>{`${authUser.email}님 환영합니다.`}</p>
-            <Link to="/mypage">마이페이지</Link>
-            <button onClick={handleSignOut}>로그아웃</button>
-          </>
-        ) : (
-          <>
-            <Link to="/signin">로그인</Link>
-          </>
-        )}
+      <div className="headerWrap">
+        <Link to="/">
+          <img src="../img/logo.png" alt="" className="logo"/>
+        </Link>
+        <div className="menuList">
+          <div>메뉴</div>
+          <div>메뉴</div>
+          <div>메뉴</div>
+          <div>메뉴</div>
+          <div>메뉴</div>
+        </div>
+        <div className="sign">
+          {authUser ? (
+            <>
+              <p>{`${authUser.email}님 환영합니다.`}</p>
+              <Link to="/mypage">마이페이지</Link>
+              <button onClick={handleSignOut}>로그아웃</button>
+            </>
+          ) : (
+            <>
+              <Link to="/signin">로그인</Link>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );

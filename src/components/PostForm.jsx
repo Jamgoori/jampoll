@@ -91,13 +91,14 @@ const PostForm = () => {
             value={field.fieldName}
             onChange={(e) => handleFieldChange(index, e.target.value)}
           />
+          {/* <input
+          type="file"
+          onChange={(e) => setImageUpload(e.target.files[0])}
+        /> */}
         </div>
       ))}
       <div className="flex">
-        <input
-          type="file"
-          onChange={(e) => setImageUpload(e.target.files[0])}
-        />
+
         <button onClick={handleAddField}>필드 추가</button>
         <button onClick={realPost}>글 작성</button>
       </div>

@@ -1,34 +1,39 @@
-.header img {
-  width: 100px;
+.flex {
+  display: flex;
 }
+/* 헤더 */
 .header {
   width: 100%;
   background-color: #dedede;
+  height: 60px;
+}
+.headerWrap{
   display: flex;
   justify-content: space-between;
-  min-height: 60px;
+  align-items: center;
+  width: 1200px;
+  margin: 0 auto;
 }
+.logo{width: 100px;}
 .menuList {
   display: flex;
 }
 .header .sign {
   display: flex;
 }
-.flex {
-  display: flex;
-}
+
 .width100 {
   width: 100%;
 }
+
+
 /* 로그인 */
 .sign {
   padding-right: 50px;
 }
 button {
   display: block;
-  margin: 10px;
   width: 100%;
-  padding: 10px;
   background-color: #9619de;
   color: #ffffff;
   border: none;
