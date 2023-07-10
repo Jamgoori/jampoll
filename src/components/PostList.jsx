@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { db, storage } from '../firebase';
-import { collection, getDocs, updateDoc, doc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, updateDoc, doc, deleteDoc, setDoc, getDoc } from 'firebase/firestore';
 import { getDownloadURL, listAll, ref } from 'firebase/storage';
 
 const PostList = () => {
@@ -37,9 +37,25 @@ const PostList = () => {
 
   const deleteTitle = async (id) => {
     const titleDoc = doc(db, "board", id);
+    
+    // question 서브컬렉션 삭제
+    const subcollectionRef = collection(titleDoc, "question");
+    const subcollectionSnapshot = await getDocs(subcollectionRef);
+    subcollectionSnapshot.forEach(async (subDoc) => {
+      await deleteDoc(subDoc.ref);
+    });
+    
+    // answer 서브컬렉션 삭제
+    const answerSubcollectionRef = collection(titleDoc, "answer");
+    const answerSubcollectionSnapshot = await getDocs(answerSubcollectionRef);
+    answerSubcollectionSnapshot.forEach(async (answerDoc) => {
+      await deleteDoc(answerDoc.ref);
+    });    
     await deleteDoc(titleDoc);
+  
     getTitle();
   };
+  
 
   useEffect(() => {
     getTitle();
@@ -59,7 +75,31 @@ const PostList = () => {
     });
   }, []);
 
+
   const [pollItems, setPollItems] = useState([]);
+
+
+const addAnswerField = async (titleId, pollItemId) => {
+  const answerSubcollectionRef = collection(doc(db, 'board', titleId), 'answer');
+  const answerDocRef = doc(answerSubcollectionRef, pollItemId);
+
+  // answer 문서 가져오기
+  const answerDoc = await getDoc(answerDocRef);
+  if (answerDoc.exists()) {
+    const currentData = answerDoc.data();
+    let currentValue = currentData[pollItemId] || 0;
+    currentValue += 1;
+
+    // answer 필드 업데이트
+    await updateDoc(answerDocRef, {
+      [pollItemId]: currentValue
+    });
+  } else {
+    // answer 문서가 존재하지 않을 경우 새로 생성
+    await setDoc(answerDocRef, {
+      [pollItemId]: 1
+    });
+  }}
 
   return (
     <div>
@@ -70,7 +110,7 @@ const PostList = () => {
             <div>투표설명: {titleItem.content}</div>
             <div className='moonsue'>
               {titleItem.pollItems.map((pollItem) => (
-                <div key={pollItem.id}>투표안건 문서 ID: {pollItem.id}</div>
+              <button onClick={() => addAnswerField(titleItem.id, pollItem.id)}>투표안건: {pollItem.id}</button>
               ))}
             </div>
             <button onClick={() => { updateTitle(titleItem.id, titleItem.title) }}>제목 변경하기</button>
