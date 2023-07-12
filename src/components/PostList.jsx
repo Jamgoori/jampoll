@@ -15,8 +15,7 @@ const PostList = () => {
   const [title, setTitle] = useState([]);
   const titleCollectionRef = collection(db, "board");
   const [answerData, setAnswerData] = useState([]);
-
-  const [buttonClicked, setButtonClicked] = useState(false); // Track button click
+  const [buttonClicked, setButtonClicked] = useState(false); // 버튼 클릭 여부 추적
 
   const getTitle = async () => {
     const data = await getDocs(titleCollectionRef);
@@ -26,7 +25,7 @@ const PostList = () => {
     }));
 
     const pollItemsData = [];
-    const answerDataArray = []; // Array to hold the answer data
+    const answerDataArray = []; // 답변 데이터를 담을 배열
 
     for (const title of titles) {
       const subcollectionRef = collection(
@@ -39,7 +38,7 @@ const PostList = () => {
         ...doc.data(),
       }));
 
-      // Fetch answer data for each pollItem
+      // 각 pollItem에 대한 answer 데이터 가져오기
       const answerSubcollectionRef = collection(
         doc(titleCollectionRef, title.id),
         "answer"
@@ -55,7 +54,7 @@ const PostList = () => {
     }
 
     setPollItems(pollItemsData);
-    setAnswerData(answerDataArray); // Set the answer data state
+    setAnswerData(answerDataArray); // 답변 데이터 상태 업데이트
   };
 
   const updateTitle = async (id, title) => {
@@ -81,6 +80,7 @@ const PostList = () => {
     answerSubcollectionSnapshot.forEach(async (answerDoc) => {
       await deleteDoc(answerDoc.ref);
     });
+
     await deleteDoc(titleDoc);
 
     getTitle();
@@ -132,7 +132,7 @@ const PostList = () => {
       });
     }
 
-    // Set buttonClicked state to trigger rendering
+    // 버튼 클릭 여부 상태 업데이트하여 렌더링 트리거
     setButtonClicked(true);
   };
 
@@ -140,7 +140,7 @@ const PostList = () => {
     <div>
       {pollItems.map((titleItem) => {
         return (
-          <div key={titleItem.id}>
+          <div key={titleItem.id} className="voteLeader">
             <div>제목: {titleItem.title}</div>
             <div>투표설명: {titleItem.content}</div>
             <div className="moonsue">

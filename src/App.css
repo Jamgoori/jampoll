@@ -41,6 +41,7 @@ button {
   border: none;
   border-radius: 3px;
   cursor: pointer;
+  padding: 10px;
 }
 
 button:hover {
@@ -57,4 +58,11 @@ button:hover {
 }
 .mainbody {
   padding: 0 50px;
+}
+
+.voteLeader {
+  padding: 10px;
+  margin: 20px auto;
+  width: 1000px;
+  background-color: #dedede;
 }

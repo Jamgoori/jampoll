@@ -15,9 +15,10 @@ const PostForm = () => {
   const [newContent, setNewContent] = useState("");
   const [fieldList, setFieldList] = useState([{ fieldName: "" }]);
   const [submittedPosts, setSubmittedPosts] = useState([]);
+  const [imageUpload, setImageUpload] = useState(null);
 
+  // 컴포넌트 마운트 시 데이터베이스에서 제출된 게시물 가져오기
   useEffect(() => {
-    // Fetch submitted posts from the database on component mount
     const fetchPosts = async () => {
       const boardCollectionRef = collection(db, "board");
       const snapshot = await getDocs(boardCollectionRef);
@@ -28,16 +29,19 @@ const PostForm = () => {
     fetchPosts();
   }, []);
 
+  // 필드 이름 업데이트
   const handleFieldChange = (index, value) => {
     const updatedFieldList = [...fieldList];
     updatedFieldList[index] = { fieldName: value };
     setFieldList(updatedFieldList);
   };
 
+  // 새로운 필드 추가
   const handleAddField = () => {
     setFieldList([...fieldList, { fieldName: "" }]);
   };
 
+  // 제목, 내용 및 생성일 타임스탬프를 포함한 새 게시물 생성
   const createTitle = async () => {
     const newPost = {
       title: newTitle,
@@ -48,18 +52,19 @@ const PostForm = () => {
     const boardCollectionRef = collection(db, "board");
     const newTitleDocRef = doc(boardCollectionRef);
 
-    // 게시물 제목 저장
+    // "board" 컬렉션에 게시물 제목 저장
     await setDoc(newTitleDocRef, newPost);
 
     const subcollectionRef = collection(newTitleDocRef, "question");
     const answerSubcollectionRef = collection(newTitleDocRef, "answer");
 
-    // 투표안건을 문서로 생성하고 각 문서에 값을 저장
+    // 각 질문과 답변에 대한 문서 생성
     for (let i = 0; i < fieldList.length; i++) {
       // question
       const fieldName = fieldList[i].fieldName;
       const subcollectionDocRef = doc(subcollectionRef, fieldName);
       await setDoc(subcollectionDocRef, { fieldName });
+
       // answer
       const answerSubcollectionDocRef = doc(answerSubcollectionRef);
       await setDoc(answerSubcollectionDocRef, {});
@@ -71,14 +76,13 @@ const PostForm = () => {
     setFieldList([{ fieldName: "" }]);
   };
 
+  // 이미지 업로드
   const uploadImage = async (image) => {
     const storage = getStorage();
     const imageRef = ref(storage, `images/${image.name + v4()}`);
     await uploadBytes(imageRef, image);
     alert("이미지가 업로드 되었습니다.");
   };
-
-  const [imageUpload, setImageUpload] = useState(null);
 
   const realPost = () => {
     createTitle();
