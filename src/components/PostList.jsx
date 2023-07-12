@@ -6,27 +6,43 @@ import { getDownloadURL, listAll, ref } from 'firebase/storage';
 const PostList = () => {
   const [title, setTitle] = useState([]);
   const titleCollectionRef = collection(db, "board");
+  const [answerData, setAnswerData] = useState([]);
 
-  const getTitle = async () => {
-    const data = await getDocs(titleCollectionRef);
-    const titles = data.docs.map((doc) => ({
-      ...doc.data(),
+  const [buttonClicked, setButtonClicked] = useState(false); // Track button click
+
+const getTitle = async () => {
+  const data = await getDocs(titleCollectionRef);
+  const titles = data.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  }));
+
+  const pollItemsData = [];
+  const answerDataArray = []; // Array to hold the answer data
+
+  for (const title of titles) {
+    const subcollectionRef = collection(doc(titleCollectionRef, title.id), "question");
+    const subcollectionData = await getDocs(subcollectionRef);
+    const pollItems = subcollectionData.docs.map((doc) => ({
       id: doc.id,
+      ...doc.data(),
     }));
-  
-    const pollItemsData = [];
-    for (const title of titles) {
-      const subcollectionRef = collection(doc(titleCollectionRef, title.id), "question");
-      const subcollectionData = await getDocs(subcollectionRef);
-      const pollItems = subcollectionData.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      pollItemsData.push({ ...title, pollItems });
-    }
-  
-    setPollItems(pollItemsData);
-  };
+
+    // Fetch answer data for each pollItem
+    const answerSubcollectionRef = collection(doc(titleCollectionRef, title.id), "answer");
+    const answerSubcollectionData = await getDocs(answerSubcollectionRef);
+    const answerItems = answerSubcollectionData.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    pollItemsData.push({ ...title, pollItems });
+    answerDataArray.push(...answerItems);
+  }
+
+  setPollItems(pollItemsData);
+  setAnswerData(answerDataArray); // Set the answer data state
+};
 
   const updateTitle = async (id, title) => {
     const titleDoc = doc(db, "board", id);
@@ -59,7 +75,8 @@ const PostList = () => {
 
   useEffect(() => {
     getTitle();
-  }, []);
+    setButtonClicked(false);
+  }, [buttonClicked]); 
 
   const [imageList, setImageList] = useState([]);
 
@@ -79,27 +96,31 @@ const PostList = () => {
   const [pollItems, setPollItems] = useState([]);
 
 
-const addAnswerField = async (titleId, pollItemId) => {
-  const answerSubcollectionRef = collection(doc(db, 'board', titleId), 'answer');
-  const answerDocRef = doc(answerSubcollectionRef, pollItemId);
+  const addAnswerField = async (titleId, pollItemId) => {
+    const answerSubcollectionRef = collection(doc(db, 'board', titleId), 'answer');
+    const answerDocRef = doc(answerSubcollectionRef, pollItemId);
 
-  // answer 문서 가져오기
-  const answerDoc = await getDoc(answerDocRef);
-  if (answerDoc.exists()) {
-    const currentData = answerDoc.data();
-    let currentValue = currentData[pollItemId] || 0;
-    currentValue += 1;
+    // answer 문서 가져오기
+    const answerDoc = await getDoc(answerDocRef);
+    if (answerDoc.exists()) {
+      const currentData = answerDoc.data();
+      let currentValue = currentData[pollItemId] || 0;
+      currentValue += 1;
+      alert("투표가 완료되었습니다.");
+      // answer 필드 업데이트
+      await updateDoc(answerDocRef, {
+        [pollItemId]: currentValue
+      });
+    } else {
+      // answer 문서가 존재하지 않을 경우 새로 생성
+      await setDoc(answerDocRef, {
+        [pollItemId]: 1
+      });
+    }
 
-    // answer 필드 업데이트
-    await updateDoc(answerDocRef, {
-      [pollItemId]: currentValue
-    });
-  } else {
-    // answer 문서가 존재하지 않을 경우 새로 생성
-    await setDoc(answerDocRef, {
-      [pollItemId]: 1
-    });
-  }}
+    // Set buttonClicked state to trigger rendering
+    setButtonClicked(true);
+  };
 
   return (
     <div>
@@ -109,19 +130,35 @@ const addAnswerField = async (titleId, pollItemId) => {
             <div>제목: {titleItem.title}</div>
             <div>투표설명: {titleItem.content}</div>
             <div className='moonsue'>
-              {titleItem.pollItems.map((pollItem) => (
-              <button onClick={() => addAnswerField(titleItem.id, pollItem.id)}>투표안건: {pollItem.id}</button>
-              ))}
+              {titleItem.pollItems.map((pollItem) => {
+                const answerDataItem = answerData.find((item) => item.id === pollItem.id);  
+                return (
+                  <div key={pollItem.id}>
+                    <button onClick={() => addAnswerField(titleItem.id, pollItem.id)}>
+                      투표안건: {pollItem.id}
+                    </button>
+                    {answerDataItem && (
+                      <div>
+                        pollItemId: {pollItem.id}, currentValue: {answerDataItem[pollItem.id]}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
-            <button onClick={() => { updateTitle(titleItem.id, titleItem.title) }}>제목 변경하기</button>
-            <button onClick={() => { deleteTitle(titleItem.id) }}>글 삭제하기</button>
 
-
+            <button onClick={() => { updateTitle(titleItem.id, titleItem.title) }}>
+              제목 변경하기
+            </button>
+            <button onClick={() => { deleteTitle(titleItem.id) }}>
+              글 삭제하기
+            </button>
           </div>
         );
       })}
     </div>
   );
+  
 };
 
 export default PostList;

@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { db } from "../firebase";
 import {
   collection,
   doc,
   serverTimestamp,
   setDoc,
+  getDocs,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
@@ -13,6 +14,19 @@ const PostForm = () => {
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [fieldList, setFieldList] = useState([{ fieldName: "" }]);
+  const [submittedPosts, setSubmittedPosts] = useState([]);
+
+  useEffect(() => {
+    // Fetch submitted posts from the database on component mount
+    const fetchPosts = async () => {
+      const boardCollectionRef = collection(db, "board");
+      const snapshot = await getDocs(boardCollectionRef);
+      const posts = snapshot.docs.map((doc) => doc.data());
+      setSubmittedPosts(posts);
+    };
+
+    fetchPosts();
+  }, []);
 
   const handleFieldChange = (index, value) => {
     const updatedFieldList = [...fieldList];
@@ -42,7 +56,7 @@ const PostForm = () => {
 
     // 투표안건을 문서로 생성하고 각 문서에 값을 저장
     for (let i = 0; i < fieldList.length; i++) {
-      // qeustion
+      // question
       const fieldName = fieldList[i].fieldName;
       const subcollectionDocRef = doc(subcollectionRef, fieldName);
       await setDoc(subcollectionDocRef, { fieldName });
@@ -96,14 +110,9 @@ const PostForm = () => {
             value={field.fieldName}
             onChange={(e) => handleFieldChange(index, e.target.value)}
           />
-          {/* <input
-          type="file"
-          onChange={(e) => setImageUpload(e.target.files[0])}
-        /> */}
         </div>
       ))}
       <div className="flex">
-
         <button onClick={handleAddField}>필드 추가</button>
         <button onClick={realPost}>글 작성</button>
       </div>
