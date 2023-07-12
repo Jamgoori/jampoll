@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
 import auth from "../../firebase";
 
@@ -11,13 +15,26 @@ const Signin = () => {
   const signIn = (e) => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
-      .then((useCredential) => {
-        console.log(useCredential);
+      .then((userCredential) => {
+        console.log(userCredential);
         navigate("/");
       })
       .catch((error) => {
         console.log(error);
         alert("ID/PW를 잘못입력하였습니다.");
+      });
+  };
+
+  const signInWithGoogle = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((userCredential) => {
+        console.log(userCredential);
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("구글 로그인에 실패했습니다.");
       });
   };
 
@@ -44,6 +61,8 @@ const Signin = () => {
         <p>아직 회원이 아니신가요?</p>
         <Link to="/signup">회원가입</Link>
       </div>
+
+      <button onClick={signInWithGoogle}>구글로 로그인</button>
     </div>
   );
 };

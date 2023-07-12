@@ -7,14 +7,16 @@
   background-color: #dedede;
   height: 60px;
 }
-.headerWrap{
+.headerWrap {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 1200px;
   margin: 0 auto;
 }
-.logo{width: 100px;}
+.logo {
+  width: 100px;
+}
 .menuList {
   display: flex;
 }
@@ -26,14 +28,14 @@
   width: 100%;
 }
 
-
 /* 로그인 */
 .sign {
   padding-right: 50px;
 }
 button {
   display: block;
-  width: 100%;
+  width: 50%;
+  margin: 16px;
   background-color: #9619de;
   color: #ffffff;
   border: none;
@@ -49,5 +51,10 @@ button:hover {
   width: 50%;
   margin: 0 auto;
 }
-.pollImg{width: 200px; height: 200px;}
-.mainbody{padding: 0 50px;}
+.pollImg {
+  width: 200px;
+  height: 200px;
+}
+.mainbody {
+  padding: 0 50px;
+}
