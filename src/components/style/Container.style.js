@@ -66,6 +66,21 @@ export const Button = styled.button`
         background-color: #8400af;
     }
 `
+
+export const CustomButton = styled.button`
+    width: ${(props) => props.width}px;
+    height: 50px;
+    margin: ${(props) => props.margin};
+    background-color: ${(props) => props.bgc};
+    color: #ffffff;
+    border: none;
+    border-radius: ${(props) => props.borderR};
+    cursor: pointer;
+    padding: 10px;
+    &:hover{
+        background-color: #8400af;
+    }
+`
 export const FlexForm = styled.form`
     display: flex;
     justify-content: ${(props)=> props.js};    

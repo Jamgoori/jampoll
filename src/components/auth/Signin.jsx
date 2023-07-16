@@ -26,19 +26,6 @@ const Signin = () => {
       });
   };
 
-  const signInWithGoogle = () => {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((userCredential) => {
-        console.log(userCredential);
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("구글 로그인에 실패했습니다.");
-      });
-  };
-
   return (
     <CustomDiv width="900" margin="0 auto" padding="50">
       <FlexForm flexdr="column" ai="center" onSubmit={signIn}>

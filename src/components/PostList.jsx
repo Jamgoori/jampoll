@@ -11,7 +11,7 @@ import {
 } from "firebase/firestore";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { Button, CustomDiv, FlexDiv } from "./style/Container.style";
-
+import auth from "../firebase";
 const PostList = () => {
   const [title, setTitle] = useState([]);
   const titleCollectionRef = collection(db, "board");
@@ -85,33 +85,49 @@ const PostList = () => {
 
   const deleteTitle = async (id) => {
     const titleDoc = doc(db, "board", id);
-
-    // question 서브컬렉션 삭제
+  
+    const currentUser = auth.currentUser;
+    const postSnapshot = await getDoc(titleDoc);
+    if (postSnapshot.exists()) {
+      const postData = postSnapshot.data();
+      if (postData.userId !== currentUser.uid) {
+        alert("본인 글만 삭제할 수 있습니다.");
+        return;
+      }
+    }
+  
+    // Delete question subcollection
     const subcollectionRef = collection(titleDoc, "question");
     const subcollectionSnapshot = await getDocs(subcollectionRef);
     subcollectionSnapshot.forEach(async (subDoc) => {
       await deleteDoc(subDoc.ref);
     });
-
-    // answer 서브컬렉션 삭제
+  
+    // Delete answer subcollection
     const answerSubcollectionRef = collection(titleDoc, "answer");
     const answerSubcollectionSnapshot = await getDocs(answerSubcollectionRef);
     answerSubcollectionSnapshot.forEach(async (answerDoc) => {
       await deleteDoc(answerDoc.ref);
     });
-
+  
+    // Delete the post document itself
     await deleteDoc(titleDoc);
-
+  
     setButtonClicked(true);
   };
-
   const addAnswerField = async (titleId, pollItemId) => {
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+  
     const answerSubcollectionRef = collection(
       doc(db, "board", titleId),
       "answer"
     );
     const answerDocRef = doc(answerSubcollectionRef, pollItemId);
-
+  
     // answer 문서 가져오기
     const answerDoc = await getDoc(answerDocRef);
     if (answerDoc.exists()) {
@@ -128,10 +144,11 @@ const PostList = () => {
         [pollItemId]: 1,
       });
     }
-
+  
     // 버튼 클릭 여부 상태 업데이트하여 렌더링 트리거
     setButtonClicked(true);
   };
+  
 
   return (
     <div>
@@ -145,7 +162,7 @@ const PostList = () => {
                 (item) => item.id === pollItem.id
               );
               return (
-                <FlexDiv key={pollItem.id}>
+                <FlexDiv key={pollItem.id} margin="16px 0">
                   <Button
                     width="200"
                     onClick={() =>
@@ -155,9 +172,9 @@ const PostList = () => {
                     "{pollItem.id}" 투표하기
                   </Button>
                   {answerDataItem && (
-                    <div>
+                    <FlexDiv js="center" ai="center" margin="0 0 0 16px">
                       {pollItem.id}, 투표결과: {answerDataItem[pollItem.id]}
-                    </div>
+                    </FlexDiv>
                   )}
                 </FlexDiv>
               );
