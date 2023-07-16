@@ -9,6 +9,7 @@ import {
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
+import { FlexDiv, Button } from "./style/Container.style";
 
 const PostForm = () => {
   const [newTitle, setNewTitle] = useState("");
@@ -116,10 +117,10 @@ const PostForm = () => {
           />
         </div>
       ))}
-      <div className="flex">
-        <button onClick={handleAddField}>필드 추가</button>
-        <button onClick={realPost}>글 작성</button>
-      </div>
+      <FlexDiv>
+        <Button onClick={handleAddField}>필드 추가</Button>
+        <Button onClick={realPost}>글 작성</Button>
+      </FlexDiv>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import auth from "../firebase";
 import { useNavigate } from "react-router-dom";
-
+import { Button, Header2, FlexBetweenDiv, FlexDiv, Logo} from "./style/Container.style";
 const Header = () => {
   const [authUser, setAuthUser] = useState(null);
   const navigate = useNavigate();
@@ -32,33 +32,33 @@ const Header = () => {
   };
 
   return (
-    <header className="header">
-      <div className="headerWrap">
+    <Header2 className="header">
+      <FlexBetweenDiv width="1200">
         <Link to="/">
-          <img src="../img/logo.png" alt="" className="logo"/>
+          <Logo src="../img/logo.png" alt=""/>
         </Link>
-        <div className="menuList">
+        <FlexDiv >
           <div>메뉴</div>
           <div>메뉴</div>
           <div>메뉴</div>
           <div>메뉴</div>
           <div>메뉴</div>
-        </div>
-        <div className="sign">
+        </FlexDiv>
+        <FlexDiv >
           {authUser ? (
             <>
               <p>{`${authUser.email}님 환영합니다.`}</p>
               <Link to="/mypage">마이페이지</Link>
-              <button onClick={handleSignOut}>로그아웃</button>
+              <Button onClick={handleSignOut}>로그아웃</Button>
             </>
           ) : (
             <>
               <Link to="/signin">로그인</Link>
             </>
           )}
-        </div>
-      </div>
-    </header>
+        </FlexDiv>
+      </FlexBetweenDiv>
+    </Header2>
   );
 };
 

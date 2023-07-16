@@ -6,6 +6,7 @@ import {
 } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
 import auth from "../../firebase";
+import { Button, CustomDiv, FlexDiv, H1, Input } from "../style/Container.style";
 
 const Signin = () => {
   const [email, setEmail] = useState("");
@@ -39,22 +40,28 @@ const Signin = () => {
   };
 
   return (
-    <div className="signInContainer">
+    <CustomDiv width="900" margin="0 auto" padding="50">
       <form onSubmit={signIn}>
-        <h1>로그인</h1>
-        <input
-          type="email"
-          placeholder="이메일을 입력하세요"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="비밀번호를 입력하세요"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">로그인</button>
+        <H1 margin="0">로그인</H1>
+        <CustomDiv>
+          <FlexDiv flexdr="column" ai="center">
+            <Input
+              maxwidth="500px"
+              type="email"
+              placeholder="이메일을 입력하세요"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Input
+              maxwidth="500px"
+              type="password"
+              placeholder="비밀번호를 입력하세요"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </FlexDiv>
+          <Button width="316" margin="16" type="submit">로그인</Button>
+        </CustomDiv>
       </form>
 
       <div>
@@ -62,8 +69,8 @@ const Signin = () => {
         <Link to="/signup">회원가입</Link>
       </div>
 
-      <button onClick={signInWithGoogle}>구글로 로그인</button>
-    </div>
+      <Button margin="16 0" onClick={signInWithGoogle}>구글로 로그인</Button>
+    </CustomDiv>
   );
 };
 

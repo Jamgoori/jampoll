@@ -10,7 +10,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
-
+import {Button} from "./style/Container.style";
 const PostList = () => {
   const [title, setTitle] = useState([]);
   const titleCollectionRef = collection(db, "board");
@@ -150,11 +150,11 @@ const PostList = () => {
                 );
                 return (
                   <div key={pollItem.id}>
-                    <button
+                    <Button width="200"
                       onClick={() => addAnswerField(titleItem.id, pollItem.id)}
                     >
                       "{pollItem.id}" 투표하기
-                    </button>
+                    </Button>
                     {answerDataItem && (
                       <div>
                         {pollItem.id}, 투표결과: {answerDataItem[pollItem.id]}
@@ -172,13 +172,13 @@ const PostList = () => {
             >
               제목 변경하기
             </button> */}
-            <button
+            <Button width="200"
               onClick={() => {
                 deleteTitle(titleItem.id);
               }}
             >
               글 삭제하기
-            </button>
+            </Button>
           </div>
         );
       })}
