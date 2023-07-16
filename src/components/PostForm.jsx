@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
-import { FlexDiv, Button } from "./style/Container.style";
+import { FlexDiv, Button, Input, Modal, HiddenModal } from "./style/Container.style";
 
 const PostForm = () => {
   const [newTitle, setNewTitle] = useState("");
@@ -17,6 +17,21 @@ const PostForm = () => {
   const [fieldList, setFieldList] = useState([{ fieldName: "" }]);
   const [submittedPosts, setSubmittedPosts] = useState([]);
   const [imageUpload, setImageUpload] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const openModal = () => {
+    setShowModal(true);
+  };
+  
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const handleOutsideClick = (e) => {
+    if (e.target.classList.contains('modal')) {
+      closeModal();
+    }
+  };
+
 
   // 컴포넌트 마운트 시 데이터베이스에서 제출된 게시물 가져오기
   useEffect(() => {
@@ -93,35 +108,43 @@ const PostForm = () => {
   };
 
   return (
-    <div>
-      <input
-        placeholder="투표제목"
-        value={newTitle}
-        onChange={(e) => {
-          setNewTitle(e.target.value);
-        }}
-      />
-      <input
-        placeholder="투표설명"
-        value={newContent}
-        onChange={(e) => {
-          setNewContent(e.target.value);
-        }}
-      />
-      {fieldList.map((field, index) => (
-        <div key={index}>
-          <input
-            placeholder={`투표안건 ${index + 1}`}
-            value={field.fieldName}
-            onChange={(e) => handleFieldChange(index, e.target.value)}
+    <>
+      <Button width="320" borderR="5px" onClick={openModal}>투표 만들기</Button>
+      <Modal className={showModal ? 'modal' : 'hidden'} onClick={handleOutsideClick}>
+        <FlexDiv flexdr="column">
+          <Input
+                  maxwidth="500px"
+            placeholder="투표제목"
+            value={newTitle}
+            onChange={(e) => {
+              setNewTitle(e.target.value);
+            }}
           />
-        </div>
-      ))}
-      <FlexDiv>
-        <Button onClick={handleAddField}>필드 추가</Button>
-        <Button onClick={realPost}>글 작성</Button>
-      </FlexDiv>
-    </div>
+          <Input
+                  maxwidth="500px"
+            placeholder="투표설명"
+            value={newContent}
+            onChange={(e) => {
+              setNewContent(e.target.value);
+            }}
+          />
+          {fieldList.map((field, index) => (
+            <div key={index}>
+              <Input
+                  maxwidth="500px"
+                placeholder={`투표안건 ${index + 1}`}
+                value={field.fieldName}
+                onChange={(e) => handleFieldChange(index, e.target.value)}
+              />
+            </div>
+          ))}
+          <FlexDiv flexdr="column">
+            <Button width="320" borderR="5px" onClick={handleAddField}>필드 추가</Button>
+            <Button width="320" borderR="5px" onClick={realPost}>글 작성</Button>
+          </FlexDiv>
+        </FlexDiv>
+      </Modal>
+    </>
   );
 };
 

@@ -6,7 +6,7 @@ import {
 } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
 import auth from "../../firebase";
-import { Button, CustomDiv, FlexDiv, H1, Input } from "../style/Container.style";
+import { Button, CustomDiv, FlexDiv, FlexForm, H1, Input, P } from "../style/Container.style";
 
 const Signin = () => {
   const [email, setEmail] = useState("");
@@ -41,10 +41,10 @@ const Signin = () => {
 
   return (
     <CustomDiv width="900" margin="0 auto" padding="50">
-      <form onSubmit={signIn}>
+      <FlexForm flexdr="column" ai="center" onSubmit={signIn}>
         <H1 margin="0">로그인</H1>
         <CustomDiv>
-          <FlexDiv flexdr="column" ai="center">
+          <FlexDiv flexdr="column" ai="center" margin="30px 0">
             <Input
               maxwidth="500px"
               type="email"
@@ -60,16 +60,19 @@ const Signin = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </FlexDiv>
-          <Button width="316" margin="16" type="submit">로그인</Button>
+          <FlexDiv flexdr="column" ai="center" margin="16 0 0 0">
+            <Button width="320" borderR="5px" type="submit">로그인</Button>          
+          </FlexDiv>
         </CustomDiv>
-      </form>
 
-      <div>
-        <p>아직 회원이 아니신가요?</p>
-        <Link to="/signup">회원가입</Link>
-      </div>
+        <CustomDiv width="320" textAlign="center" margin="10px 0">
+          <P padding="0 0 8px 0" fontSize="12px">아직 회원이 아니신가요?</P>
+          <Link to="/signup">회원가입</Link>
+        </CustomDiv>
 
-      <Button margin="16 0" onClick={signInWithGoogle}>구글로 로그인</Button>
+      </FlexForm>
+
+
     </CustomDiv>
   );
 };
