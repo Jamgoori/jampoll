@@ -46,7 +46,13 @@ const Header = () => {
           <Logo src="../img/logo.png" alt="" />
         </Link>
         <Link to="/food">
-          <div>Food</div>
+          <div>음식</div>
+        </Link>
+        <Link to="/travel">
+          <div>여행</div>
+        </Link>
+        <Link to="/invest">
+          <div>투자</div>
         </Link>
         <FlexDiv>
           {authUser ? (

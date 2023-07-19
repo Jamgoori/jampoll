@@ -18,7 +18,7 @@ import {
 import auth from "../firebase";
 import PostForm from "../components/PostForm";
 
-const Food = () => {
+const Travel = () => {
   const titleCollectionRef = collection(db, "board");
   const [answerData, setAnswerData] = useState([]);
   const [buttonClicked, setButtonClicked] = useState(false); // 버튼 클릭 여부 추적
@@ -148,7 +148,7 @@ const Food = () => {
 
   return (
     <div>
-      <h1>음식🍔</h1>
+      <h1>여행🛫</h1>
       {pollItems.map((titleItem) => (
         <CustomDiv
           padding="50"
@@ -198,4 +198,4 @@ const Food = () => {
   );
 };
 
-export default Food;
+export default Travel;

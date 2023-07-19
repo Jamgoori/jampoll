@@ -8,6 +8,8 @@ import AuthDetail from "./components/AuthDetail";
 import "./App.css";
 import { AppContainer } from "./components/style/Container.style";
 import Food from "./pages/Food";
+import Travel from "./pages/Travel";
+import Invest from "./pages/Invest";
 const App = () => {
   return (
     <div className="App">
@@ -18,6 +20,8 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/mypage" element={<AuthDetail />} />
           <Route path="/food" element={<Food />} />
+          <Route path="/travel" element={<Travel />} />
+          <Route path="/invest" element={<Invest />} />
           <Route path="/" element={<Main />} />
         </Routes>
       </AppContainer>
