@@ -13,7 +13,6 @@ import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { Button, CustomDiv, FlexDiv } from "./style/Container.style";
 import auth from "../firebase";
 const PostList = () => {
-  const [title, setTitle] = useState([]);
   const titleCollectionRef = collection(db, "board");
   const [answerData, setAnswerData] = useState([]);
   const [buttonClicked, setButtonClicked] = useState(false); // 버튼 클릭 여부 추적
@@ -62,7 +61,7 @@ const PostList = () => {
       setPollItems(pollItemsData);
       setAnswerData(answerDataArray); // 답변 데이터 상태 업데이트
     };
-
+    // 이미지
     const fetchImageList = async () => {
       const response = await listAll(imageListRef);
       const imageUrls = await Promise.all(
@@ -76,16 +75,9 @@ const PostList = () => {
     setButtonClicked(false);
   }, [buttonClicked]);
 
-  const updateTitle = async (id, title) => {
-    const titleDoc = doc(db, "board", id);
-    const newFields = { title: title + "변경됨" };
-    await updateDoc(titleDoc, newFields);
-    setButtonClicked(true);
-  };
-
   const deleteTitle = async (id) => {
     const titleDoc = doc(db, "board", id);
-  
+
     const currentUser = auth.currentUser;
     const postSnapshot = await getDoc(titleDoc);
     if (postSnapshot.exists()) {
@@ -95,24 +87,23 @@ const PostList = () => {
         return;
       }
     }
-  
-    // Delete question subcollection
+    // 질문삭제
     const subcollectionRef = collection(titleDoc, "question");
     const subcollectionSnapshot = await getDocs(subcollectionRef);
     subcollectionSnapshot.forEach(async (subDoc) => {
       await deleteDoc(subDoc.ref);
     });
-  
+
     // Delete answer subcollection
     const answerSubcollectionRef = collection(titleDoc, "answer");
     const answerSubcollectionSnapshot = await getDocs(answerSubcollectionRef);
     answerSubcollectionSnapshot.forEach(async (answerDoc) => {
       await deleteDoc(answerDoc.ref);
     });
-  
+
     // Delete the post document itself
     await deleteDoc(titleDoc);
-  
+
     setButtonClicked(true);
   };
   const addAnswerField = async (titleId, pollItemId) => {
@@ -121,13 +112,13 @@ const PostList = () => {
       alert("로그인이 필요합니다.");
       return;
     }
-  
+
     const answerSubcollectionRef = collection(
       doc(db, "board", titleId),
       "answer"
     );
     const answerDocRef = doc(answerSubcollectionRef, pollItemId);
-  
+
     // answer 문서 가져오기
     const answerDoc = await getDoc(answerDocRef);
     if (answerDoc.exists()) {
@@ -144,16 +135,22 @@ const PostList = () => {
         [pollItemId]: 1,
       });
     }
-  
+
     // 버튼 클릭 여부 상태 업데이트하여 렌더링 트리거
     setButtonClicked(true);
   };
-  
 
   return (
     <div>
       {pollItems.map((titleItem) => (
-        <CustomDiv padding="50" width="50%" borderR="10px" margin="0 0 24px" border="1px solid #777" key={titleItem.id}>
+        <CustomDiv
+          padding="50"
+          width="50%"
+          borderR="10px"
+          margin="0 0 24px"
+          border="1px solid #777"
+          key={titleItem.id}
+        >
           <div>제목: {titleItem.title}</div>
           <div>투표설명: {titleItem.content}</div>
           <div>
@@ -165,9 +162,7 @@ const PostList = () => {
                 <FlexDiv key={pollItem.id} margin="16px 0">
                   <Button
                     width="200"
-                    onClick={() =>
-                      addAnswerField(titleItem.id, pollItem.id)
-                    }
+                    onClick={() => addAnswerField(titleItem.id, pollItem.id)}
                   >
                     "{pollItem.id}" 투표하기
                   </Button>

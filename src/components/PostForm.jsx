@@ -9,17 +9,27 @@ import {
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
-import { FlexDiv, Button, Input, Modal, HiddenModal } from "./style/Container.style";
+import {
+  FlexDiv,
+  Button,
+  Input,
+  Modal,
+  HiddenModal,
+} from "./style/Container.style";
 import auth from "../firebase";
+import { useLocation } from "react-router-dom";
 const PostForm = () => {
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
+  const [newCategory, setNewCategory] = useState("");
   const [fieldList, setFieldList] = useState([{ fieldName: "" }]);
   const [submittedPosts, setSubmittedPosts] = useState([]);
   const [imageUpload, setImageUpload] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const location = useLocation();
+  const { pathname } = location;
+  const pathName = pathname.substring(1);
 
   // 모달
   const openModal = () => {
@@ -40,20 +50,20 @@ const PostForm = () => {
     }
   };
 
-    // 컴포넌트 마운트 시 로그인 상태 확인
-    useEffect(() => {
-      const unsubscribe = auth.onAuthStateChanged((user) => {
-        if (user) {
-          setIsLoggedIn(true); // 사용자가 로그인되어 있는 경우
-        } else {
-          setIsLoggedIn(false); // 사용자가 로그인되어 있지 않은 경우
-        }
-      });
-  
-      return () => {
-        unsubscribe(); // Clean up the subscription
-      };
-    }, []);
+  // 컴포넌트 마운트 시 로그인 상태 확인
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setIsLoggedIn(true); // 사용자가 로그인되어 있는 경우
+      } else {
+        setIsLoggedIn(false); // 사용자가 로그인되어 있지 않은 경우
+      }
+    });
+
+    return () => {
+      unsubscribe(); // Clean up the subscription
+    };
+  }, []);
 
   // 컴포넌트 마운트 시 데이터베이스에서 제출된 게시물 가져오기
   useEffect(() => {
@@ -92,6 +102,7 @@ const PostForm = () => {
       content: newContent,
       createdat: serverTimestamp(),
       userId: user.uid,
+      category: pathName,
     };
 
     const boardCollectionRef = collection(db, "board");
@@ -119,6 +130,7 @@ const PostForm = () => {
     setNewTitle("");
     setNewContent("");
     setFieldList([{ fieldName: "" }]);
+    setNewCategory("");
   };
 
   // 이미지 업로드
@@ -129,8 +141,8 @@ const PostForm = () => {
     alert("이미지가 업로드 되었습니다.");
   };
 
-  const realPost = () => {
-    createTitle();
+  const realPost = async () => {
+    await createTitle();
     if (imageUpload) {
       uploadImage(imageUpload);
     }
@@ -149,7 +161,10 @@ const PostForm = () => {
           투표 만들기
         </Button>
       </FlexDiv>
-      <Modal className={showModal ? "modal" : "hidden"} onClick={handleOutsideClick}>
+      <Modal
+        className={showModal ? "modal" : "hidden"}
+        onClick={handleOutsideClick}
+      >
         <FlexDiv flexdr="column">
           <Input
             maxwidth="500px"

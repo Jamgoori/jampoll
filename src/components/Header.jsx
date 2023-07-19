@@ -3,7 +3,15 @@ import { Link } from "react-router-dom";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import auth from "../firebase";
 import { useNavigate } from "react-router-dom";
-import { Button, Header2, FlexBetweenDiv, FlexDiv, Logo} from "./style/Container.style";
+import {
+  Button,
+  Header2,
+  FlexBetweenDiv,
+  FlexDiv,
+  Logo,
+} from "./style/Container.style";
+import { Routes, Route } from "react-router-dom";
+import Food from "../pages/Food";
 const Header = () => {
   const [authUser, setAuthUser] = useState(null);
   const navigate = useNavigate();
@@ -35,16 +43,12 @@ const Header = () => {
     <Header2 className="header">
       <FlexBetweenDiv width="1200">
         <Link to="/">
-          <Logo src="../img/logo.png" alt=""/>
+          <Logo src="../img/logo.png" alt="" />
         </Link>
-        <FlexDiv >
-          <div>메뉴</div>
-          <div>메뉴</div>
-          <div>메뉴</div>
-          <div>메뉴</div>
-          <div>메뉴</div>
-        </FlexDiv>
-        <FlexDiv >
+        <Link to="/food">
+          <div>Food</div>
+        </Link>
+        <FlexDiv>
           {authUser ? (
             <>
               <p>{`${authUser.email}님 환영합니다.`}</p>
