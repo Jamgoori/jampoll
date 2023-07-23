@@ -4,6 +4,7 @@ import styled from 'styled-components';
 export const AppContainer  = styled.div`
     width: 100%;
     background-color: #e1e1e1;
+    padding-top: 100px;
 `
 export const Logo = styled.img`
     width: 100px;
@@ -34,6 +35,8 @@ export const H1 = styled.h1`
     font-weight: bold;
 `
 export const Header2 = styled.header`
+    position: fixed;
+    position: 0;
     width: 100%;
     background-color: #dedede;
     height: 60px;

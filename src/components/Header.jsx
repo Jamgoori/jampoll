@@ -57,7 +57,6 @@ const Header = () => {
         <FlexDiv>
           {authUser ? (
             <>
-              <p>{`${authUser.email}님 환영합니다.`}</p>
               <Link to="/mypage">마이페이지</Link>
               <Button onClick={handleSignOut}>로그아웃</Button>
             </>

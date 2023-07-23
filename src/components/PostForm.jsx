@@ -151,12 +151,13 @@ const PostForm = () => {
 
   return (
     <>
-      <FlexDiv js="center">
+      <FlexDiv js="end">
         <Button
-          width="320"
+          width="100"
           borderR="5px"
           onClick={openModal}
           disabled={!isLoggedIn}
+          margin="0 0 25px 0"
         >
           투표 만들기
         </Button>
