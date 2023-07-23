@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { db, storage } from "../firebase";
 import {
   collection,
@@ -17,23 +17,25 @@ import {
 } from "../components/style/Container.style";
 import auth from "../firebase";
 import PostForm from "../components/PostForm";
-
+import { useLocation } from "react-router-dom";
 const Food = () => {
   const titleCollectionRef = collection(db, "board");
   const [answerData, setAnswerData] = useState([]);
   const [buttonClicked, setButtonClicked] = useState(false); // 버튼 클릭 여부 추적
   const [imageList, setImageList] = useState([]);
   const [pollItems, setPollItems] = useState([]); // Added setPollItems
-
+  const [totalVotes, setTotalVotes] = useState(0);
+    const [isButtonClicked, setIsButtonClicked] = useState(false);
   const imageListRef = ref(storage, "images/");
-
+  const location = useLocation();
+  const currentCategory = location.pathname.substring(1);  // 이제 currentCategory 변수는 현재 카테고리를 가지고 있습니다.
   useEffect(() => {
     const fetchTitleData = async () => {
       const data = await getDocs(titleCollectionRef);
       const titles = data.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
-      }));
+      })).filter(doc => doc.category === currentCategory);;
 
       const pollItemsData = [];
       const answerDataArray = []; // 답변 데이터를 담을 배열
@@ -79,7 +81,7 @@ const Food = () => {
     fetchTitleData();
     fetchImageList();
     setButtonClicked(false);
-  }, [buttonClicked]);
+  }, [buttonClicked, currentCategory]);
 
   const deleteTitle = async (id) => {
     const titleDoc = doc(db, "board", id);
@@ -112,43 +114,57 @@ const Food = () => {
 
     setButtonClicked(true);
   };
-  const addAnswerField = async (titleId, pollItemId) => {
+  const addAnswerField = useCallback(async (titleId, pollItemId) => {
     const currentUser = auth.currentUser;
     if (!currentUser) {
       alert("로그인이 필요합니다.");
       return;
     }
-
+  
     const answerSubcollectionRef = collection(
       doc(db, "board", titleId),
       "answer"
     );
     const answerDocRef = doc(answerSubcollectionRef, pollItemId);
-
+  
     // answer 문서 가져오기
     const answerDoc = await getDoc(answerDocRef);
     if (answerDoc.exists()) {
       const currentData = answerDoc.data();
-      let currentValue = currentData[pollItemId] || 0;
+      let currentValue = currentData.answer || 0;
       alert("투표가 완료되었습니다.");
       // answer 필드 업데이트
       await updateDoc(answerDocRef, {
-        [pollItemId]: currentValue + 1,
+        answer: currentValue + 1,
       });
     } else {
       // answer 문서가 존재하지 않을 경우 새로 생성
       await setDoc(answerDocRef, {
-        [pollItemId]: 1,
+        answer: 1,
       });
     }
-
+  
     // 버튼 클릭 여부 상태 업데이트하여 렌더링 트리거
     setButtonClicked(true);
-  };
+  
+    // 투표값 계산하기
+    const answerSubcollectionSnapshot = await getDocs(answerSubcollectionRef);
+    let totalVotes = 0;
+  
+    answerSubcollectionSnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.answer !== undefined) {
+        totalVotes += data.answer;
+      }
+    });
+    setTotalVotes(totalVotes);  
+    setIsButtonClicked(true); 
+  }, []);
 
   return (
     <div>
-      <h1>음식🍔</h1>
+      <h1>음식🍔</h1>      
+      <PostForm />
       {pollItems.map((titleItem) => (
         <CustomDiv
           padding="50"
@@ -166,7 +182,7 @@ const Food = () => {
                 (item) => item.id === pollItem.id
               );
               return (
-                <FlexDiv key={pollItem.id} margin="16px 0">
+                 <FlexDiv key={pollItem.id} margin="16px 0">
                   <Button
                     width="200"
                     onClick={() => addAnswerField(titleItem.id, pollItem.id)}
@@ -175,10 +191,12 @@ const Food = () => {
                   </Button>
                   {answerDataItem && (
                     <FlexDiv js="center" ai="center" margin="0 0 0 16px">
-                      {pollItem.id}, 투표결과: {answerDataItem[pollItem.id]}
+                      투표결과: {answerDataItem.answer}
+                      {isButtonClicked && <span>투표율: {((+answerDataItem.answer / +totalVotes) * 100).toFixed(2)}%
+        </span>}
                     </FlexDiv>
                   )}
-                </FlexDiv>
+              </FlexDiv>
               );
             })}
           </div>
@@ -192,8 +210,6 @@ const Food = () => {
           </Button>
         </CustomDiv>
       ))}
-
-      <PostForm />
     </div>
   );
 };

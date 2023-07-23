@@ -151,8 +151,6 @@ const PostList = () => {
         totalVotes += data.answer;
       }
     });
-  
-    console.log(`Total votes for pollItemId ${pollItemId}: ${totalVotes}`);
     setTotalVotes(totalVotes);  
     setIsButtonClicked(true); 
   }, []);
@@ -185,7 +183,7 @@ const PostList = () => {
                   </Button>
                   {answerDataItem && (
                     <FlexDiv js="center" ai="center" margin="0 0 0 16px">
-                      {pollItem.id}, 투표결과: {answerDataItem.answer}
+                      투표결과: {answerDataItem.answer}
                       {isButtonClicked && <span>투표율: {((+answerDataItem.answer / +totalVotes) * 100).toFixed(2)}%
         </span>}
                     </FlexDiv>

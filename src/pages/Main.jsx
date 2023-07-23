@@ -7,7 +7,6 @@ const Main = () => {
   return (
     <CustomDiv width="1200" margin="0 auto">
       <div>메인</div>
-      <PostForm />
       <PostList />
     </CustomDiv>
   );
